@@ -11,8 +11,8 @@ const getId = function(){
 
 /**
  * Fetch the API url with ID
- * @params {string}
- * @returns {promise}
+ * @param {String}
+ * @return {Promise}
  */
 const fetchDataId =  function(id){
     return  fetch("http://localhost:3000/api/products/"+id)
@@ -21,9 +21,9 @@ const fetchDataId =  function(id){
 }
 
 /**
- * update the logo in the page
- * @params {string}
- * @params {string}
+ * update the image of the product in the page
+ * @param { String } imageUrl
+ * @param { String } altTxt
  */
 const logoUpdate = function(imageUrl, altTxt){
     let div = document.getElementsByClassName('item__img');
@@ -32,22 +32,37 @@ const logoUpdate = function(imageUrl, altTxt){
     img.setAttribute('alt', altTxt);
     div[0].appendChild(img);
 }
-
-const titleUpdate = function(titleFromId){
-    let title = document.getElementById('title');
-    title.textContent = titleFromId;    
+/**
+ * Update the product name
+ * @param {String} nameFromId 
+ */
+const nameUpdate = function(nameFromId){
+    let name = document.getElementById('title');
+    name.textContent = nameFromId;    
 }
 
+/**
+ * Update the product price
+ * @param {Number} priceFromId 
+ */
 const priceUpate = function(priceFromId){    
     let price = document.getElementById('price');
     price.textContent = priceFromId;
 }
 
+/**
+ * Update the product description
+ * @param {String} descriptionFromId 
+ */
 const descriptionUpdate = function(descriptionFromId){
     let description = document.getElementById('description');
     description.textContent = descriptionFromId;
 }
 
+/**
+ * 
+ * @param { (String | Array) } colorsFromId
+ */
 const colorsOptionUpdate = function(colorsFromId){
     let colorsOption = document.getElementById('colors');
     colorsFromId.forEach(color => {
@@ -58,6 +73,36 @@ const colorsOptionUpdate = function(colorsFromId){
     });
 }
 
+
+const gestionDuClik = function(){
+    document.getElementById('addToCart').addEventListener('click', mouseEvent => {
+        mouseEvent.preventDefault();
+
+        let userChoice = [];
+        let kanapObject = {};
+        let quantity = parseInt(document.getElementById('quantity').value)
+
+        kanapObject.id = getId();
+        kanapObject.color = document.getElementById('colors').value;        
+        kanapObject.price = parseInt(document.getElementById('price').textContent);
+        if (quantity<=100) {
+            kanapObject.quantity = quantity;
+            userChoice.push(kanapObject);
+        }else{
+            alert('Vous ne pouvez mettre plus de 100 produits dans le panier.')
+        }
+
+        console.log(userChoice[0]);
+
+    })
+
+
+
+
+
+
+}
+
 /**
  * main function
  * call the others function
@@ -66,10 +111,11 @@ const main = async function(){
     let id = getId();
     let dataFromId = await fetchDataId(id);
     logoUpdate(dataFromId.imageUrl, dataFromId.altTxt);
-    titleUpdate(dataFromId.title);
+    nameUpdate(dataFromId.name);
     priceUpate(dataFromId.price);
     descriptionUpdate(dataFromId.description);
     colorsOptionUpdate(dataFromId.colors);
+    gestionDuClik();
 }
 
 main();
