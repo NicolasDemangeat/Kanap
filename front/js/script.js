@@ -1,14 +1,4 @@
 /**
- * Fetch the main url of the API.
- * @returns {Promise}
- */
-const fetchData = function(){
-    return fetch("http://localhost:3000/api/products/")
-    .then(response => response.json())
-    .catch(e => console.log("il y a une erreur de type : " + e));
-}
-
-/**
  * Main function, push element in the HTML page.
  * @return {HTMLElement}
  */
