@@ -11,44 +11,45 @@ const gestionDuClik = function(){
     document.getElementById('addToCart').addEventListener('click', mouseEvent => {
         mouseEvent.preventDefault();
 
-        let userChoice = [];
-        let kanapObject = {};
         let urlId = getId();
         let userChoiceQuantity = parseInt(document.getElementById('quantity').value)
         let userChoiceColor = document.getElementById('colors').value;
 
         if (checkUserChoices(userChoiceColor, userChoiceQuantity)) {
+            let userChoice = [];
+            let kanapObject = {};
             kanapObject.quantity = userChoiceQuantity;
             kanapObject.id = urlId;
             kanapObject.color = userChoiceColor;
-            userChoice.push(kanapObject);
-
             if(localStorage.getItem('kanapDatas')){
-                console.log('il y a un element')
+                console.log('il y a des elementss')
                 let arrCart = [];
                 arrCart = JSON.parse(localStorage.getItem("kanapDatas"));
                 
-                let newArrCart = arrCart.filter(kanap => kanap.color == kanapObject.color && kanap.id === kanapObject.id);
-
+                let newArrCart = arrCart.filter(kanap => kanap.color == userChoiceColor && kanap.id === urlId);
                 if(newArrCart.length){
-                    newArrCart[0].quantity += userChoiceQuantity;
+                    let total = userChoiceQuantity + newArrCart[0].quantity;
+                    arrCart.forEach(kanap => {
+                        if(kanap.color == userChoiceColor && kanap.id === urlId){
+                            kanap.quantity = total;
+                        };
+                    });
+                    localStorage.setItem("kanapDatas", JSON.stringify(arrCart));
+                    alert('Cet obet était déja présent dans votre panier, la quantité a été mise à jour.')
+                }else{
+                    arrCart.push(kanapObject);
+                    localStorage.setItem("kanapDatas", JSON.stringify(arrCart));                    
                 }
 
-
-                arrCart.forEach(element => {
-                    if (element.id == urlId && element.color == userChoiceColor) {
-                        element.quantity += userChoiceQuantity;
-                        console.log(element.quantity)
-                    }
-                });
             }else{
+                userChoice.push(kanapObject);
                 localStorage.setItem("kanapDatas", JSON.stringify(userChoice));
             }
 
         }else{
             alert('Il y a une erreur de saisie dans le formulaire.')
         }
-        console.log(localStorage.getItem("kanapDatas"))
+        console.log(localStorage.getItem('kanapDatas'))
     })
 }
 
@@ -57,7 +58,6 @@ const gestionDuClik = function(){
  * call the others function
  */
 const main = async function(){
-
     let id = getId();
     let dataFromId = await fetchData(id);
     logoUpdate(dataFromId.imageUrl, dataFromId.altTxt);
