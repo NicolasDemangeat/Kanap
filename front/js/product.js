@@ -10,6 +10,7 @@ const main = async function(){
     priceUpate(dataFromId.price);
     descriptionUpdate(dataFromId.description);
     colorsOptionUpdate(dataFromId.colors);
+    titleUpdate(dataFromId.name);
     gestionDuClik();
 }
 

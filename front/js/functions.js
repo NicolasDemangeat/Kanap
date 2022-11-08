@@ -8,7 +8,6 @@
     .catch(e => console.log("il y a une erreur de type : " + e));
 }
 
-
 /**
  * find the id in the current URL
  * @returns {string}
@@ -17,6 +16,15 @@
     let url = new URL(document.location.href);
     let id = url.searchParams.get('id');
     return id;
+}
+
+/**
+ * Update the tag title of the page product
+ * @param {string} kanapName 
+ */
+const titleUpdate = function(kanapName){
+    let titleTag = document.getElementsByTagName('title');
+    titleTag[0].textContent = kanapName;
 }
 
 /**
@@ -31,6 +39,7 @@ const logoUpdate = function(imageUrl, altTxt){
     img.setAttribute('alt', altTxt);
     div[0].appendChild(img);
 }
+
 /**
  * Update the product name
  * @param {String} nameFromId 
@@ -59,7 +68,7 @@ const descriptionUpdate = function(descriptionFromId){
 }
 
 /**
- * 
+ * Update the option value for the colors
  * @param { (String | Array) } colorsFromId
  */
 const colorsOptionUpdate = function(colorsFromId){
@@ -137,5 +146,7 @@ const gestionDuClik = function(){
         }else{
             alert('Il y a une erreur de saisie dans le formulaire.')
         }
+
+        console.log(localStorage.getItem("kanapDatas"));
     })
 }
