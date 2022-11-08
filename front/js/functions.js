@@ -71,3 +71,71 @@ const colorsOptionUpdate = function(colorsFromId){
         colorsOption.appendChild(option);
     });
 }
+
+/**
+ * Check if the user's choices in the form is correct
+ * @param { String } color 
+ * @param { Number } quantity 
+ * @returns 
+ */
+ const checkUserChoices = function(color, quantity){
+    if (color.length == 0 || quantity > 100 || quantity < 1) {
+        return false;
+    }else{
+        return true;
+    }    
+}
+
+/**
+ * This function is executed when uers click on the add to cart button.
+ * Firt we recover the ueser choices, then we check them with checkUserChoices.
+ * After that, we check if the localstorage is empty or not, and create or update with the new user choices.
+ */
+const gestionDuClik = function(){
+    document.getElementById('addToCart').addEventListener('click', mouseEvent => {
+        mouseEvent.preventDefault();
+
+        let urlId = getId();
+        let userChoiceQuantity = parseInt(document.getElementById('quantity').value)
+        let userChoiceColor = document.getElementById('colors').value;
+
+        if (checkUserChoices(userChoiceColor, userChoiceQuantity)) {
+            let userChoice = [];
+            let kanapObject = {};
+
+            kanapObject.quantity = userChoiceQuantity;
+            kanapObject.id = urlId;
+            kanapObject.color = userChoiceColor;
+
+            if(localStorage.getItem('kanapDatas')){
+                let arrCart = [];
+                arrCart = JSON.parse(localStorage.getItem("kanapDatas"));                
+                let newArrCart = arrCart.filter(kanap => kanap.color == userChoiceColor && kanap.id === urlId);
+
+                if(newArrCart.length){
+                    let total = userChoiceQuantity + newArrCart[0].quantity;
+
+                    arrCart.forEach(kanap => {
+                        if(kanap.color == userChoiceColor && kanap.id === urlId){
+                            kanap.quantity = total;
+                        };
+                    });
+
+                    localStorage.setItem("kanapDatas", JSON.stringify(arrCart));
+                    alert(`Cet obet était déja présent dans votre panier, la quantité a été mise à jour. \n Qauntité : ${total}`)
+
+                }else{
+                    arrCart.push(kanapObject);
+                    localStorage.setItem("kanapDatas", JSON.stringify(arrCart));                    
+                }
+
+            }else{
+                userChoice.push(kanapObject);
+                localStorage.setItem("kanapDatas", JSON.stringify(userChoice));
+            }
+
+        }else{
+            alert('Il y a une erreur de saisie dans le formulaire.')
+        }
+    })
+}
