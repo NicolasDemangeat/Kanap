@@ -1,6 +1,6 @@
 /**
  * main function
- * call the others function
+ * call the other functions
  */
 const main = async function(){
     let id = getId();
