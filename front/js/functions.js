@@ -304,24 +304,13 @@ const configDeleteButton = function(){
     })
 }
 
+/**
+ * Add event listener "click" on the order button
+ * when clicked, call regexTest function to validate the input form.
+ * If all input is OK, call postForm function
+ * @param {array} currentCart 
+ */
 const configOrderButton = function(currentCart){
-    /**
-     *     - on verifi les champs du formulaire -> faire une fonction
-        -> si NOK message d'erreur
-    - si tous les champs OK 
-        -> on créer un objet contact avec les données du formulaires et un array avec les donées du localStorage
-        contact: {
-        * firstName: string,
-        * lastName: string,
-        * address: string,
-        * city: string,
-        * email: string
-        * }
-        * products: [string] <-- array of product _id
-    
-    - on POST tout vers l'api
-     */
-
     const orderButton = document.getElementById("order");
     const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
     const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
@@ -367,7 +356,14 @@ const configOrderButton = function(currentCart){
     })
 }
 
-
+/**
+ * This function compare the input to the regex pattern
+ * If NOK, display an error message
+ * @param {string} value 
+ * @param {regex} regex 
+ * @param {string} errorMsg 
+ * @returns 
+ */
 const regexTest = function(value, regex, errorMsg){
     if (!regex.test(value)){
         errorMsg.textContent = 'Une erreur de saisi est survenue.';
@@ -378,16 +374,20 @@ const regexTest = function(value, regex, errorMsg){
     }
 }
 
-const postForm = function(contact, productId){
-
+/**
+ * fetch the api to send the contact object and the products array
+ * @param {object} contact
+ * @param {array} products 
+ */
+const postForm = function(contact, products){
     fetch("http://localhost:3000/api/products/order", {
         method : "POST",
         headers : {"Content-Type" : 'application/json;charset=utf-8'},
-        body : JSON.stringify({contact, productId})
+        body : JSON.stringify({contact, products})
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data)        
+        window.location = `confirmation.html?id=${data.orderId}`
     })
-    .catch(e => console.log("il y a une erreur sur la page cart de type :" + e)); 
+    .catch(e => console.log(e));
 }
