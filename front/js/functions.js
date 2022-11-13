@@ -304,7 +304,7 @@ const configDeleteButton = function(){
     })
 }
 
-const configOrderButton = function(){
+const configOrderButton = function(currentCart){
     /**
      *     - on verifi les champs du formulaire -> faire une fonction
         -> si NOK message d'erreur
@@ -349,9 +349,20 @@ const configOrderButton = function(){
         let regexOfEmail = regexTest(email, regexEmail, emailErrorMsg);
 
         let arrRegexTest = [regexOfFirstName,regexOfLastName,regexOfAdress,regexOfCity,regexOfEmail]
-        
-        if (!arrRegexTest.every(element => element == true)){
-            console.log('NOK')            
+
+        if (arrRegexTest.every(element => element == true)){
+            let productId = [];
+            currentCart.forEach(kanap => {
+                productId.push(kanap.id)
+            });
+            let contact = {
+                firstName : firstName,
+                lastName : lastName,
+                address : address,
+                city : city,
+                email : email,
+            }
+            postForm(contact, productId);
         }
     })
 }
@@ -365,4 +376,18 @@ const regexTest = function(value, regex, errorMsg){
         errorMsg.textContent = '';
         return true;
     }
+}
+
+const postForm = function(contact, productId){
+
+    fetch("http://localhost:3000/api/products/order", {
+        method : "POST",
+        headers : {"Content-Type" : 'application/json;charset=utf-8'},
+        body : JSON.stringify({contact, productId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)        
+    })
+    .catch(e => console.log("il y a une erreur sur la page cart de type :" + e)); 
 }

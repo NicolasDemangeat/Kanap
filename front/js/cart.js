@@ -7,7 +7,7 @@ async function main() {
     updatePrice(currentCart);
     updateWhenChange();
     configDeleteButton();
-    configOrderButton();
+    configOrderButton(currentCart);
 }
 
 main();
