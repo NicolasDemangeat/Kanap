@@ -89,7 +89,7 @@ const colorsOptionUpdate = function(colorsFromId){
  * @return {Boolean}
  */
  const checkUserChoices = function(color, quantity){
-    if (color.length == 0 || quantity > 100 || quantity < 1) {
+    if (color.length === 0 || quantity > 100 || quantity < 1) {
         return false;
     }else{
         return true;
@@ -121,29 +121,29 @@ const gestionDuClik = function(){
 
             if(localStorage.getItem('kanapDatas')){
                 let arrCart = [];
-                arrCart = JSON.parse(localStorage.getItem("kanapDatas"));                
-                let newArrCart = arrCart.filter(kanap => kanap.color == userChoiceColor && kanap.id === urlId);
+                arrCart = getLocalStorage();
+                let newArrCart = arrCart.filter(kanap => kanap.color === userChoiceColor && kanap.id === urlId);
 
                 if(newArrCart.length){
                     let total = userChoiceQuantity + newArrCart[0].quantity;
 
                     arrCart.forEach(kanap => {
-                        if(kanap.color == userChoiceColor && kanap.id === urlId){
+                        if(kanap.color === userChoiceColor && kanap.id === urlId){
                             kanap.quantity = total;
                         };
                     });
 
-                    localStorage.setItem("kanapDatas", JSON.stringify(arrCart));
+                    setLocalStorage(arrCart);
                     alert(`Cet obet était déja présent dans votre panier, la quantité a été mise à jour. \n Qauntité : ${total}`)
 
                 }else{
                     arrCart.push(kanapObject);
-                    localStorage.setItem("kanapDatas", JSON.stringify(arrCart));                    
+                    setLocalStorage(arrCart);                   
                 }
 
             }else{
                 userChoice.push(kanapObject);
-                localStorage.setItem("kanapDatas", JSON.stringify(userChoice));
+                setLocalStorage(userChoice);
             }
 
         }else{
@@ -160,13 +160,13 @@ const gestionDuClik = function(){
  */
  const checkLoop = async function(){
     let apiData = await fetchData();
-    let currentCart = JSON.parse(localStorage.getItem('kanapDatas'));
+    let currentCart = getLocalStorage();
 
     for(data of apiData)
     {
         for(kanap of currentCart)
         {
-            if(data._id == kanap.id)
+            if(data._id === kanap.id)
             {
                 displayElements(data, kanap);
             }
@@ -224,19 +224,19 @@ const displayElements = async function(data, kanap){
 
         element.addEventListener('change', event => {            
             event.preventDefault();
-            let currentCart = JSON.parse(localStorage.getItem('kanapDatas'));
+            let currentCart = getLocalStorage();
             let newQuantity = element.value;
             if(newQuantity < 1 || newQuantity > 100){
                 alert('Les quantités doivent être comprie entre 1 et 100')
             }else{
                 currentCart.forEach(kanap => {
-                    if(kanap.id == id && kanap.color == color){
+                    if(kanap.id === id && kanap.color === color){
                         kanap.quantity = parseInt(newQuantity)
-                        localStorage.setItem("kanapDatas", JSON.stringify(currentCart));
+                        setLocalStorage(currentCart);
                     }
                 })
             }
-            currentCart = JSON.parse(localStorage.getItem('kanapDatas'));
+            currentCart = getLocalStorage();
             updateQuantity(currentCart);
             updatePrice(currentCart);
         })
@@ -288,18 +288,12 @@ const configDeleteButton = function(){
 
         element.addEventListener('click', event => {
             event.preventDefault();
-            let currentCart = JSON.parse(localStorage.getItem('kanapDatas'));
-            currentCart.forEach(kanap => {
-                if(kanap.id == id && kanap.color == color){
-                    let pos = currentCart.indexOf(kanap)
-                    currentCart.splice(pos, 1);
-                    localStorage.setItem("kanapDatas", JSON.stringify(currentCart));
-                    currentCart = JSON.parse(localStorage.getItem('kanapDatas'));
-                    tagClosest.remove();
-                    updatePrice(currentCart);
-                    updateQuantity(currentCart);
-                }
-            })
+            let currentCart = getLocalStorage();
+            const newCart = currentCart.filter(kanap => kanap.id !== id || kanap.color !== color);
+            setLocalStorage(newCart)
+            tagClosest.remove();
+            updatePrice(newCart);
+            updateQuantity(newCart);
         })
     })
 }
@@ -339,7 +333,7 @@ const configOrderButton = function(currentCart){
 
         let arrRegexTest = [regexOfFirstName,regexOfLastName,regexOfAdress,regexOfCity,regexOfEmail]
 
-        if (arrRegexTest.every(element => element == true)){
+        if (arrRegexTest.every(element => element === true)){
             let productId = [];
             currentCart.forEach(kanap => {
                 productId.push(kanap.id)
@@ -389,5 +383,22 @@ const postForm = function(contact, products){
     .then(data => {
         window.location = `confirmation.html?id=${data.orderId}`
     })
-    .catch(e => console.log(e));
+    .catch(e => console.error(e));
+}
+
+/**
+ * Parse the localStorage with JSON and return it
+ * @returns localStorage
+ */
+const getLocalStorage = () => {
+    return JSON.parse(localStorage.getItem('kanapDatas'));
+}
+
+/**
+ * set the localStorage with the array JSON strigify
+ * @param {array} cart 
+ * @returns localStorage.setItem('kanapDatas', JSON.stringify(cart))
+ */
+const setLocalStorage = (cart) => {
+    localStorage.setItem('kanapDatas', JSON.stringify(cart));
 }

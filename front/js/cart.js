@@ -1,6 +1,6 @@
 const main = async function() {
     await checkLoop();
-    let currentCart = JSON.parse(localStorage.getItem('kanapDatas'));
+    let currentCart = getLocalStorage() || [];
     updateQuantity(currentCart);
     updatePrice(currentCart);
     updateWhenChange();
