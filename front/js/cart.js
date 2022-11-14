@@ -1,6 +1,6 @@
 const main = async function() {
-    await checkLoop();
     let currentCart = getLocalStorage() || [];
+    await checkLoop(currentCart);
     updateQuantity(currentCart);
     updatePrice(currentCart);
     updateWhenChange();

@@ -158,10 +158,8 @@ const gestionDuClik = function(){
  * Then compare the ID in the current cart with the id in the collection,
  * if ok => displayElements()
  */
- const checkLoop = async function(){
+ const checkLoop = async function(currentCart){
     let apiData = await fetchData();
-    let currentCart = getLocalStorage();
-
     for(data of apiData)
     {
         for(kanap of currentCart)
