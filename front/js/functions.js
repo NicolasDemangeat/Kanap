@@ -138,12 +138,14 @@ const gestionDuClik = function(){
 
                 }else{
                     arrCart.push(kanapObject);
-                    setLocalStorage(arrCart);                   
+                    setLocalStorage(arrCart);    
+                    alert(`Le produit a correctement été ajouté au panier.`)               
                 }
 
             }else{
                 userChoice.push(kanapObject);
                 setLocalStorage(userChoice);
+                alert(`Le produit a correctement été ajouté au panier.`)
             }
 
         }else{
