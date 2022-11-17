@@ -117,7 +117,6 @@ const gestionDuClik = function(){
             kanapObject.quantity = userChoiceQuantity;
             kanapObject.id = urlId;
             kanapObject.color = userChoiceColor;
-            kanapObject.price = kanapPrice;
 
             if(localStorage.getItem('kanapDatas')){
                 let arrCart = [];
@@ -191,7 +190,7 @@ const displayElements = async function(data, kanap){
                         <div class="cart__item__content__description">
                             <h2>${data.name}</h2>
                             <p class="color">Couleur : ${kanap.color}</p>
-                            <p class="price">${kanap.price}€</p>
+                            <p class="price">${data.price}€</p>
                         </div>
                         <div class="cart__item__content__settings">
                             <div class="cart__item__content__settings__quantity">
@@ -209,7 +208,7 @@ const displayElements = async function(data, kanap){
 }
 
 /**
- * this function select all the tag element with the clas itemQuantity
+ * this function select all the tag element with the class itemQuantity
  * then compare the id and color to the id and color of the cart product
  * if match, and new quantity is between 1 and 100, upddate the new quantity in the cart
  * 
@@ -261,13 +260,18 @@ const updateQuantity = function(currentCart){
   * update the total kanap price
   * @param {array} currentCart 
   */
-  const updatePrice = function(currentCart){
+  const updatePrice = async function(currentCart){
     let spanPrice = document.getElementById('totalPrice');
+    let allProducts = await fetchData();
     let totalPrice = 0;
 
-    currentCart.forEach(kanap => {
-        totalPrice += kanap.quantity * kanap.price;
-    });
+    for (const kanap of currentCart) {
+        for (const product of allProducts) {
+            if (kanap.id === product._id) {
+                totalPrice += kanap.quantity * product.price;
+            }            
+        }        
+    }
     spanPrice.textContent = totalPrice;
     return totalPrice;
 }
