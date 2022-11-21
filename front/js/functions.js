@@ -108,7 +108,6 @@ const gestionDuClik = function(){
         let urlId = getId();
         let userChoiceQuantity = parseInt(document.getElementById('quantity').value)
         let userChoiceColor = document.getElementById('colors').value;
-        let kanapPrice = document.getElementById('price').textContent;
 
         if (checkUserChoices(userChoiceColor, userChoiceQuantity)) {
             let userChoice = [];
@@ -316,8 +315,8 @@ const configOrderButton = function(currentCart){
     const cityErrorMsg = document.getElementById("cityErrorMsg");
     const emailErrorMsg = document.getElementById("emailErrorMsg");
 
-    const regexName = /^[a-zA-ZÀ-ÿ_-]{2,60}$/;
-    const regexCity = /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;
+    const regexName = /^[a-zA-ZÀ-ÿ._\s-]{2,60}$/;
+    const regexCity = /^[a-zA-ZÀ-ÿ]+(?:[\s-][a-zA-ZÀ-ÿ._\s-]+)*$/;
     const regexAddress = /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
     const regexEmail = /^[^@\s]{2,30}@[^@\s]{2,30}\.[^@\s]{2,5}$/;
 
